@@ -9,8 +9,33 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
-
 model User {
-  id   String @id @default(uuid())
-  name String
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  aviaries  Aviary[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Aviary {
+  id        Int      @id @default(autoincrement())
+  name      String
+  devices   Device[]
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Device {
+  id         Int       @id @default(autoincrement())
+  name       String
+  deviceId   String    @unique
+  status     Boolean
+  aviary     Aviary    @relation(fields: [aviaryId], references: [id])
+  aviaryId   Int
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
